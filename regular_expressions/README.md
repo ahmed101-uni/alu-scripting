@@ -1,1 +1,1 @@
-A repository for Regular expression task.
+A repository for the Regular expression task.

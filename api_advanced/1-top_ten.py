@@ -3,6 +3,7 @@
 A module that prints the titles of the top
 10 hot posts from a subreddit.
 """
+from curses import OK
 import requests
 
 
@@ -22,7 +23,7 @@ def top_ten(subreddit):
     )
 
     if response.status_code != 200:
-        print("ok") 
+        print(OK) 
         return
 
     jsonData = response.json()

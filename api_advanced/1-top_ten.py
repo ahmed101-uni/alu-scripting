@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-The module prints the titles of the top
+A module that prints the titles of the top
 10 hot posts from a subreddit.
 """
 import requests
@@ -8,35 +8,32 @@ import requests
 
 def top_ten(subreddit):
     """
-    Fetch and print the top 10 hot posts from a subreddit.
+    Fetches and prints the titles of the top ten hot posts from a subreddit.
     """
 
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     headers = {"User-Agent": "Mozilla/5.0"}
     response = requests.get(
         url,
-        params={"limit": 10},  # Limit results to 10 posts
+        params={"limit": 10},  # Ensure only 10 posts are fetched
+        allow_redirects=False,
         headers=headers,
-        allow_redirects=False  # Prevent following search result redirects
     )
 
-    # If the subreddit is invalid or API fails, return None
     if response.status_code != 200:
         print(None)
         return
 
     try:
         jsonData = response.json()
-        posts = jsonData.get("data", {}).get("children", [])
-        
-        # If no posts are found, return None
-        if not posts:
+        data = jsonData.get("data", {}).get("children", [])
+
+        if not data:  # Check if the list is empty
             print(None)
             return
 
-        # Print top 10 post titles
-        for post in posts[:10]:
+        for post in data[:10]:  # Print exactly 10 posts
             print(post.get("data", {}).get("title"))
 
-    except ValueError:  # Handle JSON parsing errors
+    except ValueError:  # Handle JSON decoding errors
         print(None)

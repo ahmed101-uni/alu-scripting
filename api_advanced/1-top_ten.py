@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-THe module prints the titles of the top
+The module prints the titles of the top
 10 hot posts from a subreddit.
 """
 import requests
@@ -12,11 +12,11 @@ def top_ten(subreddit):
     of the top 10 hot posts from a subreddit.
     """
 
-    url = "https://www.reddit.com/r/{AskProgramming}/hot.json".format(subreddit)
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     headers = {"User-Agent": "Mozilla/5.0"}
     response = requests.get(
         url,
-        params={"after": None},
+        params={"limit": 10},  
         allow_redirects=False,
         headers=headers,
     )
@@ -25,10 +25,14 @@ def top_ten(subreddit):
         print(None)
         return
 
-    jsonData = response.json()
-    data = jsonData["data"]["children"]
-    for post in data:
-        print(post.get("data", {}).get("title"))
+    try:
+        jsonData = response.json()
+        posts = jsonData.get("data", {}).get("children", [])
+        if not posts:
+            print(None)
+            return
 
-
-# top_ten("programming")
+        for post in posts[:10]:  
+            print(post.get("data", {}).get("title"))
+    except ValueError:  
+        print(None)
